@@ -45,7 +45,6 @@
   background: url('https://wallpaperaccess.com/full/4025787.jpg') no-repeat center center fixed;
   background-size: cover;
   text-align: center;
-  position: relative;
 }
 
 h1 {
@@ -67,7 +66,6 @@ h1 {
   font-size: 2em;
   color: #ff4f8b;
   animation: wamuuuPop 1s ease-in-out infinite alternate;
-  cursor: pointer;
 }
 
 @keyframes wamuuuPop {
@@ -85,71 +83,47 @@ canvas.confetti {
   z-index: 999;
 }
 
-.sparkle {
+#musicControl {
   position: absolute;
-  width: 15px;
-  height: 15px;
-  background: radial-gradient(circle, #ff4f8b 0%, transparent 70%);
-  border-radius: 50%;
-  animation: sparkle 2s infinite ease-in-out;
-}
-
-@keyframes sparkle {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(2); opacity: 0; }
-}
-
-.typewriter-text {
-  overflow: hidden;
-  border-right: .15em solid #ff4f8b;
-  white-space: nowrap;
-  margin: 10px auto;
-  animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
-}
-
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
-
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: #ff4f8b; }
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: 1px solid white;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
   </style>
 </head>
-<body>
-  <div id="intro" class="screen">
+<body>  <div id="intro" class="screen">
     <h1>🎁 Tap to open Lokesh's surprise</h1>
     <button id="openBtn">Open</button>
   </div>  <div id="mainContent">
     <h1>Happy Birthday Lokesh!</h1>
-    <div class="message typewriter-text">May your day be as powerful as Tanjiro’s blade 🗡️</div>
+    <div class="message">May your day be as powerful as Tanjiro’s blade 🗡️</div>
     <div class="message">From Ask — your bro till respawn 💚</div>
-    <div class="wamuuu" onclick="playWamuu()">WAMUUUU!</div>
+    <div class="wamuuu">WAMUUUU!</div>
     <canvas class="confetti" id="confetti"></canvas>
-    <audio id="bgMusic" autoplay loop>
-      <source src="https://vgmsite.com/soundtracks/demon-slayer-kamado-tanjiro-no-uta/1.mp3" type="audio/mp3">
+    <div id="musicControl">🔊 Mute</div>
+    <audio id="bgMusic" loop>
+      <source src="https://dl.vgmdownloads.com/soundtracks/demon-slayer-kamado-tanjiro-no-uta/1.mp3" type="audio/mpeg">
       Your browser does not support audio.
     </audio>
-    <audio id="wamuuSound">
-      <source src="https://cdn.pixabay.com/audio/2022/03/17/audio_3d6a9996b6.mp3" type="audio/mpeg">
-    </audio>
-    <img src="https://media.tenor.com/Fz60-GQDZ6cAAAAC/tanjiro.gif" alt="Tanjiro" style="width:200px; margin-top: 20px; border-radius: 20px;">
-  </div>  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>  <script>
+  </div>  <!-- Confetti library -->  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>  <script>
     const openBtn = document.getElementById("openBtn");
     const intro = document.getElementById("intro");
     const mainContent = document.getElementById("mainContent");
     const music = document.getElementById("bgMusic");
-    const wamuuSound = document.getElementById("wamuuSound");
+    const musicControl = document.getElementById("musicControl");
+    let musicPlaying = true;
 
     openBtn.addEventListener("click", () => {
       intro.style.display = "none";
       mainContent.style.display = "flex";
       music.play().catch(() => {});
       startConfetti();
-      startSparkles();
     });
 
     function startConfetti() {
@@ -162,19 +136,15 @@ canvas.confetti {
       }, 2000);
     }
 
-    function startSparkles() {
-      setInterval(() => {
-        const sparkle = document.createElement("div");
-        sparkle.classList.add("sparkle");
-        sparkle.style.left = Math.random() * 100 + "%";
-        sparkle.style.top = Math.random() * 100 + "%";
-        document.body.appendChild(sparkle);
-        setTimeout(() => sparkle.remove(), 2000);
-      }, 500);
-    }
-
-    function playWamuu() {
-      wamuuSound.play();
-    }
+    musicControl.addEventListener("click", () => {
+      if (musicPlaying) {
+        music.pause();
+        musicControl.textContent = '🔈 Unmute';
+      } else {
+        music.play().catch(() => {});
+        musicControl.textContent = '🔊 Mute';
+      }
+      musicPlaying = !musicPlaying;
+    });
   </script></body>
 </html>
