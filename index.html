@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Happy Birthday Lokesh!</title>
@@ -15,111 +14,142 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
-    }
+    }.screen {
+  text-align: center;
+  padding: 20px;
+}
 
-    .screen {
-      text-align: center;
-      padding: 20px;
-    }
+#openBtn {
+  background: #ff4f8b;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  animation: pulse 1s infinite;
+}
 
-    #openBtn {
-      background: #ff4f8b;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1.2em;
-      border-radius: 10px;
-      color: white;
-      cursor: pointer;
-      animation: pulse 1s infinite;
-    }
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
+#mainContent {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url('https://wallpaperaccess.com/full/4025787.jpg') no-repeat center center fixed;
+  background-size: cover;
+  text-align: center;
+  position: relative;
+}
 
-    #mainContent {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: url('https://wallpaperaccess.com/full/4025787.jpg') no-repeat center center fixed;
-      background-size: cover;
-      text-align: center;
-    }
+h1 {
+  font-size: 3em;
+  text-shadow: 0 0 10px #ff4f8b;
+  margin-bottom: 10px;
+}
 
-    h1 {
-      font-size: 3em;
-      text-shadow: 0 0 10px #ff4f8b;
-      margin-bottom: 10px;
-    }
+.message {
+  font-size: 1.2em;
+  margin-top: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 10px;
+}
 
-    .message {
-      font-size: 1.2em;
-      margin-top: 10px;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 10px 20px;
-      border-radius: 10px;
-    }
+.wamuuu {
+  margin-top: 20px;
+  font-size: 2em;
+  color: #ff4f8b;
+  animation: wamuuuPop 1s ease-in-out infinite alternate;
+  cursor: pointer;
+}
 
-    .wamuuu {
-      margin-top: 20px;
-      font-size: 2em;
-      color: #ff4f8b;
-      animation: wamuuuPop 1s ease-in-out infinite alternate;
-    }
+@keyframes wamuuuPop {
+  from { transform: scale(1); }
+  to { transform: scale(1.2); color: #ff0000; }
+}
 
-    @keyframes wamuuuPop {
-      from { transform: scale(1); }
-      to { transform: scale(1.2); color: #ff0000; }
-    }
+canvas.confetti {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
 
-    canvas.confetti {
-      position: fixed;
-      pointer-events: none;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 999;
-    }
+.sparkle {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: radial-gradient(circle, #ff4f8b 0%, transparent 70%);
+  border-radius: 50%;
+  animation: sparkle 2s infinite ease-in-out;
+}
+
+@keyframes sparkle {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.typewriter-text {
+  overflow: hidden;
+  border-right: .15em solid #ff4f8b;
+  white-space: nowrap;
+  margin: 10px auto;
+  animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #ff4f8b; }
+}
+
   </style>
 </head>
 <body>
-
   <div id="intro" class="screen">
     <h1>🎁 Tap to open Lokesh's surprise</h1>
     <button id="openBtn">Open</button>
-  </div>
-
-  <div id="mainContent">
+  </div>  <div id="mainContent">
     <h1>Happy Birthday Lokesh!</h1>
-    <div class="message">May your day be as powerful as Tanjiro’s blade 🗡️</div>
-    <div class="message">From Harsha — your bro till respawn 💚</div>
-    <div class="wamuuu">WAMUUUU!</div>
+    <div class="message typewriter-text">May your day be as powerful as Tanjiro’s blade 🗡️</div>
+    <div class="message">From Ask — your bro till respawn 💚</div>
+    <div class="wamuuu" onclick="playWamuu()">WAMUUUU!</div>
     <canvas class="confetti" id="confetti"></canvas>
     <audio id="bgMusic" autoplay loop>
       <source src="https://vgmsite.com/soundtracks/demon-slayer-kamado-tanjiro-no-uta/1.mp3" type="audio/mp3">
       Your browser does not support audio.
     </audio>
-  </div>
-
-  <!-- Confetti library -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-  <script>
+    <audio id="wamuuSound">
+      <source src="https://cdn.pixabay.com/audio/2022/03/17/audio_3d6a9996b6.mp3" type="audio/mpeg">
+    </audio>
+    <img src="https://media.tenor.com/Fz60-GQDZ6cAAAAC/tanjiro.gif" alt="Tanjiro" style="width:200px; margin-top: 20px; border-radius: 20px;">
+  </div>  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>  <script>
     const openBtn = document.getElementById("openBtn");
     const intro = document.getElementById("intro");
     const mainContent = document.getElementById("mainContent");
     const music = document.getElementById("bgMusic");
+    const wamuuSound = document.getElementById("wamuuSound");
 
     openBtn.addEventListener("click", () => {
       intro.style.display = "none";
       mainContent.style.display = "flex";
       music.play().catch(() => {});
       startConfetti();
+      startSparkles();
     });
 
     function startConfetti() {
@@ -131,6 +161,20 @@
         });
       }, 2000);
     }
-  </script>
-</body>
+
+    function startSparkles() {
+      setInterval(() => {
+        const sparkle = document.createElement("div");
+        sparkle.classList.add("sparkle");
+        sparkle.style.left = Math.random() * 100 + "%";
+        sparkle.style.top = Math.random() * 100 + "%";
+        document.body.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 2000);
+      }, 500);
+    }
+
+    function playWamuu() {
+      wamuuSound.play();
+    }
+  </script></body>
 </html>
