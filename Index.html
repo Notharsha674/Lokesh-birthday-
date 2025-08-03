@@ -16,10 +16,12 @@
       align-items: center;
       overflow: hidden;
     }
+
     .screen {
       text-align: center;
       padding: 20px;
     }
+
     #openBtn {
       background: #ff4f8b;
       border: none;
@@ -45,6 +47,7 @@
       height: 100vh;
       background: url('https://wallpaperaccess.com/full/4025787.jpg') no-repeat center center fixed;
       background-size: cover;
+      text-align: center;
     }
 
     h1 {
@@ -99,10 +102,13 @@
     <canvas class="confetti" id="confetti"></canvas>
     <audio id="bgMusic" autoplay loop>
       <source src="https://vgmsite.com/soundtracks/demon-slayer-kamado-tanjiro-no-uta/1.mp3" type="audio/mp3">
+      Your browser does not support audio.
     </audio>
   </div>
 
+  <!-- Confetti library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <script>
     const openBtn = document.getElementById("openBtn");
     const intro = document.getElementById("intro");
