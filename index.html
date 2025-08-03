@@ -1,104 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Happy Birthday Lokesh 🎂</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background: url('https://i.pinimg.com/originals/9d/fc/54/9dfc54ee22b6810c27e84157df56c361.gif') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
-            text-align: center;
-            overflow-x: hidden;
-        }
+  <meta charset="UTF-8">
+  <title>Happy Birthday Lokesh!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: black;
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
 
-        h1 {
-            font-size: 3em;
-            margin-top: 60px;
-            animation: fadeIn 3s ease-in-out;
-        }
+    .screen, #mainContent {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      z-index: 1;
+    }
 
-        h2 {
-            font-size: 2em;
-            margin: 20px;
-            animation: fadeIn 5s ease-in-out;
-        }
+    #openBtn {
+      background: #ff4f8b;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+      animation: pulse 1s infinite;
+    }
 
-        #tanjiro-img {
-            width: 300px;
-            animation: bounce 2s infinite;
-        }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
 
-        .button {
-            padding: 15px 25px;
-            margin: 20px;
-            font-size: 1.2em;
-            cursor: pointer;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 10px;
-            color: white;
-            transition: transform 0.2s;
-        }
+    #mainContent {
+      display: none;
+      background: url('https://wallpaperaccess.com/full/4025787.jpg') no-repeat center center fixed;
+      background-size: cover;
+      padding: 20px;
+    }
 
-        .button:hover {
-            transform: scale(1.1);
-        }
+    h1 {
+      font-size: 3em;
+      text-shadow: 0 0 10px #ff4f8b;
+      margin-bottom: 10px;
+    }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
+    .message {
+      font-size: 1.2em;
+      margin: 10px 0;
+      background: rgba(0,0,0,0.5);
+      padding: 10px 20px;
+      border-radius: 10px;
+    }
 
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
+    .wamuuu {
+      margin-top: 20px;
+      font-size: 2em;
+      color: #ff4f8b;
+      animation: wamuuuPop 1s ease-in-out infinite alternate;
+    }
 
-        audio {
-            display: none;
-        }
-    </style>
+    @keyframes wamuuuPop {
+      from { transform: scale(1); }
+      to { transform: scale(1.2); color: #ff0000; }
+    }
+
+    canvas.confetti {
+      position: fixed;
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 999;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: radial-gradient(circle, #ff4f8b 0%, transparent 70%);
+      border-radius: 50%;
+      animation: sparkle 2s infinite ease-in-out;
+    }
+    @keyframes sparkle {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+
+    .typewriter-text {
+      overflow: hidden;
+      border-right: .15em solid #ff4f8b;
+      white-space: nowrap;
+      margin: 10px auto;
+      animation: typing 4s steps(40,end), blink-caret .75s step-end infinite;
+      width: 0;
+    }
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: #ff4f8b; }
+    }
+
+    .hearts {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 1.5em;
+      animation: floatHearts 3s ease-in-out infinite;
+    }
+    @keyframes floatHearts {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .tanjiro {
+      width: 150px;
+      animation: slideIn 2s ease-in-out;
+      margin-top: 10px;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(-200%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
 </head>
 <body>
 
-    <h1>🎉 Happy Birthday Lokesh! 🎉</h1>
-    <h2>From Ask 💚 - Your Tanjiro Fan!</h2>
+  <div id="intro" class="screen">
+    <h1>🎁 Tap to open Lokesh's surprise</h1>
+    <button id="openBtn">Open</button>
+  </div>
 
-    <img id="tanjiro-img" src="https://media.tenor.com/EuHPdknn7s4AAAAM/tanjiro-kamado.gif" alt="Tanjiro">
+  <div id="mainContent">
+    <img src="https://media.tenor.com/P-w2_M_d2FAAAAAC/tanjiro-kamado.gif" alt="Tanjiro" class="tanjiro">
+    <h1 class="typewriter-text">Happy Birthday Lokesh!</h1>
+    <div class="message typewriter-text">May your day be as powerful as Tanjiro’s blade 🗡️</div>
+    <div class="message">From Ask — your bro till respawn 💚</div>
+    <div class="wamuuu">WAMUUUU!</div>
+    <div class="hearts">💖💚💛</div>
+    <canvas class="confetti" id="confetti"></canvas>
+  </div>
 
-    <div>
-        <button class="button" onclick="playSound()">Play Music 🎵</button>
-        <button class="button" onclick="showMessage()">Wamuuu Gamer Fleet Dialog 🕹️</button>
-    </div>
+  <!-- Background music always playing -->
+  <audio src="Infinity audio.mp3" autoplay loop></audio>
 
-    <!-- Background Music -->
-    <audio id="bg-music" src="Infinity audio.mp3" loop></audio>
+  <!-- Confetti library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    const openBtn = document.getElementById("openBtn");
+    const intro = document.getElementById("intro");
+    const mainContent = document.getElementById("mainContent");
 
-    <script>
-        function playSound() {
-            const music = document.getElementById('bg-music');
-            music.play();
-            alert("Enjoy the music while you celebrate Lokesh's birthday! 🎶");
-        }
+    openBtn.addEventListener("click", () => {
+      intro.style.display = "none";
+      mainContent.style.display = "flex";
+      startConfetti();
+      startSparkles();
+    });
 
-        function showMessage() {
-            alert("Wamuuu! Gamer Fleet is here to wish you a Legendary Birthday, Lokesh! 🎮🔥");
-        }
+    function startConfetti() {
+      setInterval(() => {
+        confetti({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      }, 2000);
+    }
 
-        // Auto play music on page load (will ask user to click once due to browser restrictions)
-        window.onload = function() {
-            setTimeout(() => {
-                document.getElementById('bg-music').play().catch(() => {
-                    console.log('User interaction required to play music.');
-                });
-            }, 1000);
-        };
-    </script>
+    function startSparkles() {
+      setInterval(() => {
+        const sparkle = document.createElement("div");
+        sparkle.classList.add("sparkle");
+        sparkle.style.left = Math.random() * 100 + "%";
+        sparkle.style.top  = Math.random() * 100 + "%";
+        document.body.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 2000);
+      }, 500);
+    }
 
+    // Optional: confetti on page load
+    window.addEventListener("load", () => {
+      setTimeout(startConfetti, 1000);
+    });
+  </script>
 </body>
-</html>
+      </html>
