@@ -1,304 +1,521 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday, Lokesh! 🎉</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- Tone.js for sound effects -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(to right top, #F9A8D4, #F472B6, #EC4899); /* Pink gradient */
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
-            overflow: hidden; /* Prevent scroll from background particles */
-            position: relative;
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Animated,
+  Easing,
+  Share, // For sharing text
+  ActivityIndicator, // For loading spinner
+  Platform, // To check platform for clipboard
+} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient'; // For background gradient
+import Clipboard from '@react-native-clipboard/clipboard'; // For copying text
+import NetInfo from '@react-native-community/netinfo'; // For network check
+
+// Main App Component
+const App = () => {
+  const [giftBoxOpen, setGiftBoxOpen] = useState(false);
+  const [gamerFleetMessage, setGamerFleetMessage] = useState("Loading a special message...");
+  const [jackBhaiyaMessage, setJackBhaiyaMessage] = useState("Loading a special message...");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Animated values for gift box
+  const lidAnimation = useRef(new Animated.Value(0)).current;
+  const baseAnimation = useRef(new Animated.Value(0)).current;
+  const ribbonAnimation = useRef(new Animated.Value(1)).current; // For fading ribbons
+
+  // Animated values for dialogue boxes
+  const gamerFleetDialogueOpacity = useRef(new Animated.Value(0)).current;
+  const jackBhaiyaDialogueOpacity = useRef(new Animated.Value(0)).current;
+  const gamerFleetDialogueTranslateY = useRef(new Animated.Value(20)).current;
+  const jackBhaiyaDialogueTranslateY = useRef(new Animated.Value(20)).current;
+
+  // Function to play a simple sound (placeholder, requires a library like react-native-sound)
+  const playSound = () => {
+    // In a real React Native app, you would use a library like 'react-native-sound'
+    // For example:
+    // import Sound from 'react-native-sound';
+    // const sound = new Sound('celebration.mp3', Sound.MAIN_BUNDLE, (error) => {
+    //   if (error) {
+    //     console.log('failed to load the sound', error);
+    //     return;
+    //   }
+    //   sound.play((success) => {
+    //     if (!success) {
+    //       console.log('playback failed due to audio decoding errors');
+    //     }
+    //   });
+    // });
+    console.log("Playing a celebratory sound!");
+  };
+
+  // Function to fetch messages from Gemini API
+  const fetchGeminiMessage = async (persona, setMessage) => {
+    setIsLoading(true);
+    let chatHistory = [];
+    let prompt = "";
+
+    if (persona === "gamerFleet") {
+      prompt = "Generate a short, enthusiastic birthday message (max 30 words) for a gamer named Lokesh from 'Gamer Fleet'. Use gaming terms like 'GGs', 'level up', 'grinding', 'conquering', 'ping', 'frame rate'.";
+    } else if (persona === "jackBhaiya") {
+      prompt = "Generate a short, friendly, and encouraging birthday message (max 30 words) for Lokesh from 'Jack Bhaiya'. Use some Hindi slang like 'Kya baat hai', 'hardik shubhkamnayein', 'chill karo', 'chicken dinners'.";
+    }
+
+    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+    const payload = { contents: chatHistory };
+    const apiKey = ""; // Canvas will automatically provide this at runtime.
+
+    // Exponential backoff retry logic
+    const maxRetries = 5;
+    let retries = 0;
+    let delay = 1000; // 1 second
+
+    while (retries < maxRetries) {
+      try {
+        const netInfoState = await NetInfo.fetch();
+        if (!netInfoState.isConnected) {
+          setMessage("No internet connection. Please try again later.");
+          setIsLoading(false);
+          return;
         }
 
-        /* Background particles animation */
-        .background-particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-        }
-        .particle {
-            position: absolute;
-            background-color: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
-            animation: float 15s infinite ease-in-out alternate;
-        }
-        .particle:nth-child(1) { width: 30px; height: 30px; top: 10%; left: 20%; animation-delay: 0s; }
-        .particle:nth-child(2) { width: 40px; height: 40px; top: 50%; left: 70%; animation-delay: 2s; }
-        .particle:nth-child(3) { width: 25px; height: 25px; top: 80%; left: 40%; animation-delay: 4s; }
-        .particle:nth-child(4) { width: 35px; height: 35px; top: 30%; left: 85%; animation-delay: 6s; }
-        .particle:nth-child(5) { width: 20px; height: 20px; top: 60%; left: 10%; animation-delay: 8s; }
-        .particle:nth-child(6) { width: 45px; height: 45px; top: 5%; left: 50%; animation-delay: 10s; }
-        .particle:nth-child(7) { width: 30px; height: 30px; top: 90%; left: 60%; animation-delay: 12s; }
-        .particle:nth-child(8) { width: 38px; height: 38px; top: 20%; left: 5%; animation-delay: 14s; }
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
 
-        @keyframes float {
-            0% { transform: translateY(0px) translateX(0px); opacity: 0.5; }
-            50% { transform: translateY(-20px) translateX(10px); opacity: 0.8; }
-            100% { transform: translateY(0px) translateX(0px); opacity: 0.5; }
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        .card {
-            background-color: #ffffff;
-            border-radius: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            max-width: 900px;
-            width: 100%;
-            padding: 3rem;
-            text-align: center;
-            animation: slideIn 1s ease-out forwards;
-            opacity: 0;
-            transform: translateY(-50px);
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 500px; /* Ensure card has height for content */
-        }
-        @keyframes slideIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        const result = await response.json();
 
-        .dialogue-box {
-            background-color: #FEF2F2;
-            border-left: 5px solid #EF4444;
-            padding: 1.5rem 2rem;
-            border-radius: 1rem;
-            margin-top: 1.5rem;
-            text-align: left;
-            font-style: italic;
-            color: #4B5563;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-            width: 100%; /* Ensure it takes full width of card content area */
+        if (result.candidates && result.candidates.length > 0 &&
+            result.candidates[0].content && result.candidates[0].content.parts &&
+            result.candidates[0].content.parts.length > 0) {
+          const text = result.candidates[0].content.parts[0].text;
+          setMessage(text);
+          setIsLoading(false);
+          return; // Success, exit loop
+        } else {
+          throw new Error("Unexpected API response structure.");
         }
-        .dialogue-box.visible {
-            opacity: 1;
-            transform: translateY(0);
+      } catch (error) {
+        console.error(`Attempt ${retries + 1} failed:`, error);
+        retries++;
+        if (retries < maxRetries) {
+          await new Promise(res => setTimeout(res, delay));
+          delay *= 2; // Exponential backoff
+        } else {
+          setMessage("Failed to generate message after multiple retries. Please try again.");
+          setIsLoading(false);
         }
-        .dialogue-box strong {
-            color: #DC2626;
-            font-weight: 700;
-        }
+      }
+    }
+  };
 
-        .share-button, .generate-button {
-            background-color: #3B82F6; /* Blue for share */
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-top: 2rem;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 5px 10px -2px rgba(59, 130, 246, 0.3);
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .share-button:hover, .generate-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px -3px rgba(59, 130, 246, 0.4);
-        }
-        .share-button:active, .generate-button:active {
-            transform: translateY(0);
-            box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2);
-        }
+  // Handle gift box click
+  const handleGiftBoxClick = () => {
+    if (!giftBoxOpen) {
+      setGiftBoxOpen(true);
+      playSound(); // Play sound on opening
 
-        /* Gift Box Styling */
-        .gift-box-container {
-            width: 200px;
-            height: 200px;
-            position: relative;
-            cursor: pointer;
-            margin: 2rem auto;
-            transition: transform 0.3s ease-in-out;
-            z-index: 10; /* Ensure it's above other content initially */
-        }
-        .gift-box-container:hover {
-            transform: scale(1.05);
-        }
+      // Animate lid
+      Animated.timing(lidAnimation, {
+        toValue: 1,
+        duration: 500,
+        easing: Easing.ease,
+        useNativeDriver: true,
+      }).start();
 
-        .gift-box-base {
-            width: 100%;
-            height: 70%;
-            background-color: #EF4444; /* Red base */
-            border-radius: 10px;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            box-shadow: inset 0 -5px 0 rgba(0,0,0,0.2);
-        }
+      // Animate base (slight shrink)
+      Animated.timing(baseAnimation, {
+        toValue: 1,
+        duration: 500,
+        easing: Easing.ease,
+        useNativeDriver: true,
+      }).start();
 
-        .gift-box-lid {
-            width: 110%;
-            height: 40%;
-            background-color: #DC2626; /* Darker red lid */
-            border-radius: 10px;
-            position: absolute;
-            top: 0;
-            left: -5%;
-            transform-origin: bottom center;
-            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-        }
+      // Animate ribbons (fade out)
+      Animated.timing(ribbonAnimation, {
+        toValue: 0,
+        duration: 500,
+        easing: Easing.ease,
+        useNativeDriver: true,
+      }).start(() => {
+        // After gift box animation, reveal and animate dialogues
+        Animated.parallel([
+          Animated.timing(gamerFleetDialogueOpacity, {
+            toValue: 1,
+            duration: 500,
+            easing: Easing.ease,
+            useNativeDriver: true,
+          }),
+          Animated.timing(gamerFleetDialogueTranslateY, {
+            toValue: 0,
+            duration: 500,
+            easing: Easing.ease,
+            useNativeDriver: true,
+          }),
+          Animated.timing(jackBhaiyaDialogueOpacity, {
+            toValue: 1,
+            duration: 500,
+            easing: Easing.ease,
+            delay: 300, // Stagger appearance
+            useNativeDriver: true,
+          }),
+          Animated.timing(jackBhaiyaDialogueTranslateY, {
+            toValue: 0,
+            duration: 500,
+            easing: Easing.ease,
+            delay: 300, // Stagger appearance
+            useNativeDriver: true,
+          }),
+        ]).start();
+      });
 
-        .gift-box-ribbon-v {
-            width: 30px;
-            height: 100%;
-            background-color: #FACC15; /* Yellow ribbon */
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 5px;
-        }
+      // Fetch messages when the box opens
+      fetchGeminiMessage("gamerFleet", setGamerFleetMessage);
+      fetchGeminiMessage("jackBhaiya", setJackBhaiyaMessage);
+    }
+  };
 
-        .gift-box-ribbon-h {
-            width: 100%;
-            height: 30px;
-            background-color: #FACC15;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            border-radius: 5px;
-        }
+  // Share functionality
+  const onShare = async () => {
+    try {
+      const messageToShare = `Happy Birthday, Lokesh! 🎉\n\n${gamerFleetMessage}\n\n${jackBhaiyaMessage}\n\nFrom Ash!`;
 
-        /* Gift box open state */
-        .gift-box-container.open .gift-box-lid {
-            transform: translateY(-100%) rotateX(45deg); /* Lid flies up and rotates */
-            opacity: 0;
-        }
-        .gift-box-container.open .gift-box-base {
-            transform: scale(0.9); /* Base slightly shrinks */
-            opacity: 0;
-            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-        }
-        .gift-box-container.open .gift-box-ribbon-v,
-        .gift-box-container.open .gift-box-ribbon-h {
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
+      // For Android, Share API is generally preferred.
+      // For iOS, Share API also works, but Clipboard is an option for just copying.
+      if (Platform.OS === 'android' || Platform.OS === 'ios') {
+        await Share.share({
+          message: messageToShare,
+          title: 'Happy Birthday, Lokesh!',
+        });
+      } else {
+        // Fallback for other platforms (e.g., web preview in some environments)
+        Clipboard.setString(messageToShare);
+        console.log('Message copied to clipboard!');
+        // You might want to add a visual cue that it's copied
+      }
+    } catch (error) {
+      console.error('Error sharing:', error.message);
+    }
+  };
 
-        /* Confetti Canvas Styling */
-        #confetti-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .hidden-content {
-            display: none; /* Initially hide content revealed by gift box */
-            width: 100%;
-        }
-        .visible-content {
-            display: block; /* Show content after gift box opens */
-        }
+  // Styles for animated components
+  const animatedLidStyle = {
+    transform: [
+      {
+        translateY: lidAnimation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -200], // Moves up
+        }),
+      },
+      {
+        rotateX: lidAnimation.interpolate({
+          inputRange: [0, 1],
+          outputRange: ['0deg', '45deg'], // Rotates
+        }),
+      },
+    ],
+    opacity: lidAnimation.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1, 0], // Fades out
+    }),
+  };
 
-        /* Loading Spinner */
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #3B82F6;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            display: none; /* Hidden by default */
-            margin-left: 1rem;
-        }
+  const animatedBaseStyle = {
+    transform: [
+      {
+        scale: baseAnimation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [1, 0.9], // Shrinks slightly
+        }),
+      },
+    ],
+    opacity: baseAnimation.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1, 0], // Fades out
+    }),
+  };
 
-        .spinner.show {
-            display: block;
-        }
+  const animatedRibbonStyle = {
+    opacity: ribbonAnimation,
+  };
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-</head>
-<body>
-    <!-- Background Particles -->
-    <div class="background-particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
+  const animatedGamerFleetDialogueStyle = {
+    opacity: gamerFleetDialogueOpacity,
+    transform: [{ translateY: gamerFleetDialogueTranslateY }],
+  };
 
-    <div class="card">
-        <canvas id="confetti-canvas"></canvas>
+  const animatedJackBhaiyaDialogueStyle = {
+    opacity: jackBhaiyaDialogueOpacity,
+    transform: [{ translateY: jackBhaiyaDialogueTranslateY }],
+  };
 
-        <!-- Birthday Heading -->
-        <h1 class="text-5xl md:text-6xl font-extrabold text-gray-800 mb-6 leading-tight">
-            🎉 Happy Birthday, <span class="text-pink-600">Lokesh!</span> 🎉
-        </h1>
+  return (
+    <LinearGradient
+      colors={['#F9A8D4', '#F472B6', '#EC4899']}
+      style={styles.container}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
+      {/* Background Particles (simplified for RN) */}
+      <View style={styles.backgroundParticles}>
+        {[...Array(8)].map((_, i) => (
+          <Animated.View
+            key={i}
+            style={[
+              styles.particle,
+              {
+                width: 20 + i * 3, // Vary size
+                height: 20 + i * 3,
+                top: `${(i * 10 + 10) % 90}%`, // Vary position
+                left: `${(i * 15 + 5) % 90}%`,
+                // Simple float animation (can be more complex with Animated.loop)
+                transform: [{
+                  translateY: new Animated.Value(0).interpolate({
+                    inputRange: [0, 0.5, 1],
+                    outputRange: [0, -20, 0],
+                  })
+                }],
+                opacity: new Animated.Value(0.5).interpolate({
+                  inputRange: [0, 0.5, 1],
+                  outputRange: [0.5, 0.8, 0.5],
+                }),
+              },
+            ]}
+          />
+        ))}
+      </View>
 
-        <!-- Image Placeholder -->
-        <img
-            src="https://placehold.co/500x250/F87171/FFFFFF?text=Level+Up!+Lokesh"
-            alt="Birthday Celebration"
-            class="w-full max-w-lg mx-auto rounded-xl mb-8 shadow-lg"
-            onerror="this.onerror=null;this.src='https://placehold.co/500x250/F87171/FFFFFF?text=Birthday+Image';"
+      <View style={styles.card}>
+        <Text style={styles.title}>
+          🎉 Happy Birthday, <Text style={styles.pinkText}>Lokesh!</Text> 🎉
+        </Text>
+
+        <Image
+          source={{ uri: 'https://placehold.co/500x250/F87171/FFFFFF?text=Level+Up!+Lokesh' }}
+          style={styles.image}
+          onError={(e) => console.log('Image load error:', e.nativeEvent.error)}
+        />
+
+        <Text style={styles.message}>
+          Hey Lokesh, Ash here! Wishing you an epic birthday filled with victories, legendary loot, and zero lag! Hope your day is as awesome as a perfect headshot!
+        </Text>
+
+        {/* Gift Box */}
+        <TouchableOpacity
+          onPress={handleGiftBoxClick}
+          style={styles.giftBoxContainer}
+          disabled={giftBoxOpen} // Disable after opening
         >
+          <Animated.View style={[styles.giftBoxBase, animatedBaseStyle]} />
+          <Animated.View style={[styles.giftBoxRibbonV, animatedRibbonStyle]} />
+          <Animated.View style={[styles.giftBoxRibbonH, animatedRibbonStyle]} />
+          <Animated.View style={[styles.giftBoxLid, animatedLidStyle]} />
+        </TouchableOpacity>
 
-        <!-- Message from Ash -->
-        <p class="text-lg md:text-xl text-gray-700 mb-8">
-            Hey Lokesh, Ash here! Wishing you an epic birthday filled with victories, legendary loot, and zero lag! Hope your day is as awesome as a perfect headshot!
-        </p>
+        {/* Hidden Content (revealed by gift box) */}
+        {giftBoxOpen && (
+          <View style={styles.hiddenContent}>
+            {/* Gamer Fleet Dialogue */}
+            <Animated.View style={[styles.dialogueBox, animatedGamerFleetDialogueStyle]}>
+              <Text style={styles.dialogueText}>
+                <Text style={styles.dialogueStrong}>Gamer Fleet says:</Text> "{gamerFleetMessage}"
+              </Text>
+            </Animated.View>
 
-        <!-- Gift Box -->
-        <div id="giftBoxContainer" class="gift-box-container">
-            <div class="gift-box-base"></div>
-            <div class="gift-box-ribbon-v"></div>
-            <div class="gift-box-ribbon-h"></div>
-            <div class="gift-box-lid"></div>
-        </div>
+            {/* Jack Bhaiya Dialogue */}
+            <Animated.View style={[styles.dialogueBox, animatedJackBhaiyaDialogueStyle]}>
+              <Text style={styles.dialogueText}>
+                <Text style={styles.dialogueStrong}>Jack Bhaiya says:</Text> "{jackBhaiyaMessage}"
+              </Text>
+            </Animated.View>
 
-        <!-- Hidden Content (revealed by gift box) -->
-        <div id="hiddenContent" class="hidden-content flex flex-col items-center">
-            <!-- Gamer Fleet Dialogue -->
-            <div id="gamerFleetDialogue" class="dialogue-box">
-                <p><strong>Gamer Fleet says:</strong> "GGs, Lokesh! Another year, another level up! Keep grinding and conquering those challenges, both in-game and in life. May your ping always be low and your frame rate high!"</p>
-                <p class="text-sm mt-2 text-gray-500">
-                    (You can replace this with an actual Gamer Fleet dialogue!)
-                </p>
-            </div>
+            {/* Loading Spinner */}
+            {isLoading && (
+              <ActivityIndicator size="large" color="#3B82F6" style={styles.spinner} />
+            )}
 
-            <!-- Jack Bhaiya Dialogue -->
-            <div id="jackBhaiyaDialogue" class="dialogue-box">
-                <p><strong>Jack Bhaiya says:</strong> "Kya baat hai, Lokesh! Birthday ki hardik shubhkamnayein! Always stay positive, keep that energy up, aur bas chill karo! Life mein bhi bohot saare 'chicken dinners' milenge!"</p>
-                <p class="text-sm mt-2 text-gray-500">
-                    (You can replace this with an actual Jack Bhaiya dialogue!)
-                </p>
-            </div>
+            {/* Share Button */}
+            <TouchableOpacity onPress={onShare} style={styles.shareButton}>
+              <Text style={styles.shareButtonText}>Share This Wish</Text>
+              {/* Simple share icon (using text or a custom SVG if needed) */}
+              <Text style={styles.shareIcon}>🔗</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    </LinearGradient>
+  );
+};
 
-            <!-- Share Button -->
-            <button id="shareButton" class="share-button">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                    <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.236 2.366 5.5 5.5 0 0 1 6.201-2.549l-.103-.04A3.501 3.501 0 0 0 9.35 9.17l.348-.683a.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0  0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1 10.374 2.167 1.5 1.5 0 0 0-.616 1.096c-.07.697.439 1.392 1.115 1.493.567.085 1.129-.186 1.465-.626a.75.75 0 0 0-.583-1.153 5.5 5.5 0 0 1-8.257-3.182.75.75 0 0 0-.583-1.153 1.5 1.5 0 0 1-1.329-2.203.
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  backgroundParticles: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    zIndex: 0,
+  },
+  particle: {
+    position: 'absolute',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 50,
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 32,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 25 },
+    shadowOpacity: 0.25,
+    shadowRadius: 50,
+    elevation: 20, // For Android shadow
+    maxWidth: 900,
+    width: '100%',
+    padding: 24,
+    alignItems: 'center',
+    minHeight: 500,
+    zIndex: 1,
+  },
+  title: {
+    fontSize: 48,
+    fontWeight: '900',
+    color: '#1F2937', // gray-800
+    marginBottom: 24,
+    lineHeight: 56, // leading-tight
+    textAlign: 'center',
+  },
+  pinkText: {
+    color: '#DB2777', // pink-600
+  },
+  image: {
+    width: '100%',
+    height: 250, // Fixed height for placeholder
+    borderRadius: 16,
+    marginBottom: 32,
+    resizeMode: 'cover',
+  },
+  message: {
+    fontSize: 18,
+    color: '#374151', // gray-700
+    marginBottom: 32,
+    textAlign: 'center',
+  },
+  giftBoxContainer: {
+    width: 200,
+    height: 200,
+    position: 'relative',
+    marginVertical: 32,
+    justifyContent: 'flex-end', // Align base to bottom
+  },
+  giftBoxBase: {
+    width: '100%',
+    height: '70%',
+    backgroundColor: '#EF4444', // Red base
+    borderRadius: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+  },
+  giftBoxLid: {
+    width: '110%',
+    height: '40%',
+    backgroundColor: '#DC2626', // Darker red lid
+    borderRadius: 10,
+    position: 'absolute',
+    top: 0,
+    left: '-5%',
+    transformOrigin: 'bottom center', // Not directly supported by RN Animated, handled by translateY/rotateX
+  },
+  giftBoxRibbonV: {
+    width: 30,
+    height: '100%',
+    backgroundColor: '#FACC15', // Yellow ribbon
+    position: 'absolute',
+    left: '50%',
+    transform: [{ translateX: -15 }], // Half of width
+    borderRadius: 5,
+  },
+  giftBoxRibbonH: {
+    width: '100%',
+    height: 30,
+    backgroundColor: '#FACC15',
+    position: 'absolute',
+    top: '50%',
+    transform: [{ translateY: -15 }], // Half of height
+    borderRadius: 5,
+  },
+  hiddenContent: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  dialogueBox: {
+    backgroundColor: '#FEF2F2',
+    borderLeftWidth: 5,
+    borderLeftColor: '#EF4444',
+    paddingVertical: 24,
+    paddingHorizontal: 32,
+    borderRadius: 16,
+    marginTop: 24,
+    textAlign: 'left',
+    width: '100%',
+  },
+  dialogueText: {
+    fontStyle: 'italic',
+    color: '#4B5563',
+    fontSize: 16,
+  },
+  dialogueStrong: {
+    color: '#DC2626',
+    fontWeight: '700',
+  },
+  shareButton: {
+    backgroundColor: '#3B82F6',
+    color: 'white',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 9999,
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 32,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    shadowColor: '#3B82F6',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5, // Android shadow
+  },
+  shareButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  shareIcon: {
+    fontSize: 20, // Adjust size as needed
+    color: 'white',
+  },
+  spinner: {
+    marginTop: 20,
+  },
+});
+
+export default App;
+                        
