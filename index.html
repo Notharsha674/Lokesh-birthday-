@@ -580,4 +580,612 @@
         <!-- Hidden Content (messages, revealed after game) -->
         <div id="messagesAfterGame" class="messages-after-game">
             <!-- Gamer Fleet Dialogue -->
-            <div id="gamerFl
+            <div id="gamerFleetDialogue" class="dialogue-box">
+                <p><strong>Gamer Fleet says:</strong> <span id="gamerFleetMessage">Loading a special message...</span></p>
+            </div>
+
+            <!-- Jack Bhaiya Dialogue -->
+            <div id="jackBhaiyaDialogue" class="dialogue-box">
+                <p><strong>Jack Bhaiya says:</strong> <span id="jackBhaiyaMessage">Loading a special message...</span></p>
+            </div>
+
+            <!-- AI Assistant Message (New Section) -->
+            <div id="aiAssistantDialogue" class="dialogue-box hidden-content">
+                <p><strong>Your AI Assistant says:</strong> <span id="aiAssistantMessage">Loading a special message...</span></p>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" class="spinner"></div>
+
+            <!-- New Ash Message Button -->
+            <button id="showAshMessageButton" class="action-button hidden-content">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                    <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.438-.695Z" clip-rule="evenodd" />
+                </svg>
+                Ash's Personal Message
+            </button>
+
+            <!-- Ash's Custom Message Section (Initially Hidden) -->
+            <div id="ashCustomMessageSection" class="hidden-content">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Your Special Message to Lokesh!</h2>
+                <textarea id="ashMessageInput" class="w-full max-w-md p-3 rounded-lg border-2 border-gray-300 mb-4" placeholder="Type Ash's special message here..."></textarea>
+                <button id="sendAshMessageButton" class="action-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                        <path d="M3.478 2.405a.75.75 0 0 0-.926.94l2.432 7.917H11.25a.75.75 0 0 1 0 1.5H4.984l-2.432 7.917a.75.75 0 0 0 .926.94 60.542 60.542 0 0 0 18.445-8.916.75.75 0 0 0 0-1.275 60.566 60.566 0 0 0-18.445-8.916Z" />
+                    </svg>
+                    Send Ash's Special Message
+                </button>
+            </div>
+
+            <!-- Ash's Custom Message Display -->
+            <div id="ashCustomMessageDisplay" class="dialogue-box hidden-content">
+                <p><strong>Ash's Special Message:</strong> <span id="ashCustomMessage"></span></p>
+            </div>
+
+            <!-- Share Button -->
+            <button id="shareButton" class="action-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                    <path fill-rule="evenodd" d="M15.75 4.5a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-9a3 3 0 0 1-3-3v-9a3 3 0 0 1 3-3h9ZM8.25 8.25a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75V8.25Zm0 3a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v-.75Zm0 3a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v-.75ZM12 8.25a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75V8.25Zm0 3a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75v-.75ZM12 14.25a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75v-.75ZM15 8.25a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75V8.25Zm0 3a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75v-.75Zm0 3a.75.75 0 0 1 .75-.75h.75a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-.75a.75.75 0 0 1-.75-.75v-.75Z" clip-rule="evenodd" />
+                </svg>
+                Share This Wish
+            </button>
+
+            <!-- Final Message from Ash -->
+            <p id="finalMessageAsh" class="text-lg md:text-xl text-gray-700 mt-8 text-center final-message">
+                And from me, Ash, one last wish: May your year be filled with unforgettable adventures, epic wins, and all the happiness you deserve. Keep shining bright! ✨
+            </p>
+        </div>
+    </div>
+
+    <!-- Message Box for Copy Feedback -->
+    <div id="messageBox" class="hidden">
+        Message copied to clipboard!
+    </div>
+
+    <script>
+        // Confetti effect
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const confettiCtx = confettiCanvas.getContext('2d');
+        let confettiParticles = [];
+        const NUM_CONFETTI = 50;
+        const COLORS = ['#f472b6', '#ec4899', '#FACC15', '#3B82F6', '#ffffff'];
+
+        function resizeConfettiCanvas() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeConfettiCanvas);
+        resizeConfettiCanvas(); // Initial resize
+
+        class ConfettiParticle {
+            constructor(x, y, color, velocityScale = 1) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 8 + 4;
+                this.color = color;
+                this.velocity = {
+                    x: (Math.random() * 6 - 3) * velocityScale,
+                    y: (Math.random() * -10 - 5) * velocityScale
+                };
+                this.alpha = 1;
+                this.gravity = 0.3;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 10 - 5;
+            }
+
+            update() {
+                this.velocity.y += this.gravity;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.02;
+                this.rotation += this.rotationSpeed;
+            }
+
+            draw() {
+                confettiCtx.save();
+                confettiCtx.translate(this.x, this.y);
+                confettiCtx.rotate(this.rotation * Math.PI / 180);
+                confettiCtx.globalAlpha = this.alpha;
+                confettiCtx.fillStyle = this.color;
+                confettiCtx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                confettiCtx.restore();
+            }
+        }
+
+        function createConfetti(x, y, num = NUM_CONFETTI, velocityScale = 1) {
+            for (let i = 0; i < num; i++) {
+                confettiParticles.push(new ConfettiParticle(x, y, COLORS[Math.floor(Math.random() * COLORS.length)], velocityScale));
+            }
+        }
+
+        function animateConfetti() {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            for (let i = confettiParticles.length - 1; i >= 0; i--) {
+                confettiParticles[i].update();
+                confettiParticles[i].draw();
+                if (confettiParticles[i].alpha <= 0) {
+                    confettiParticles.splice(i, 1);
+                }
+            }
+            requestAnimationFrame(animateConfetti);
+        }
+
+        // Tone.js setup for sound effects and music
+        let synth;
+        let playSoundTimeout;
+        let demonSlayerMelodyPlaying = false;
+        let demonSlayerLoop = null; // To hold the Tone.Loop instance
+        let hitSound, missSound;
+
+        async function initializeAudio() {
+            if (Tone.context.state !== 'running') {
+                await Tone.start();
+            }
+            if (!synth) {
+                synth = new Tone.Synth({
+                    oscillator: { type: "triangle" },
+                    envelope: { attack: 0.02, decay: 0.1, sustain: 0.3, release: 0.5 }
+                }).toDestination();
+
+                // Initialize game sounds
+                hitSound = new Tone.MembraneSynth().toDestination();
+                missSound = new Tone.NoiseSynth({
+                    envelope: { attack: 0.005, decay: 0.1, sustain: 0, release: 0.1 }
+                }).toDestination();
+            }
+        }
+
+        async function playRevealSound() {
+            await initializeAudio();
+            if (synth) {
+                const now = Tone.context.now();
+                synth.triggerAttackRelease("C4", "16n", now, 0.5);
+            }
+        }
+
+        async function playCelebrationSound() {
+            await initializeAudio();
+            clearTimeout(playSoundTimeout);
+            const now = Tone.context.now();
+            if (synth) {
+                synth.triggerAttackRelease("C5", "8n", now);
+                synth.triggerAttackRelease("E5", "8n", now + 0.15);
+                synth.triggerAttackRelease("G5", "8n", now + 0.3);
+                synth.triggerAttackRelease("C6", "4n", now + 0.45);
+            } else {
+                console.warn("Synth not initialized for celebration sound.");
+            }
+        }
+
+        async function playDemonSlayerInspiredMelody() {
+            if (demonSlayerMelodyPlaying) return; // Prevent multiple instances
+            demonSlayerMelodyPlaying = true;
+
+            await initializeAudio();
+
+            if (!synth) {
+                console.warn("Synth not initialized for Demon Slayer melody.");
+                demonSlayerMelodyPlaying = false;
+                return;
+            }
+
+            // If a loop already exists and is running, stop it and dispose to prevent multiple instances
+            if (demonSlayerLoop) {
+                demonSlayerLoop.stop();
+                demonSlayerLoop.dispose();
+            }
+            
+            Tone.Transport.bpm.value = 140;
+
+            const melodyPart = new Tone.Part((time, note) => {
+                synth.triggerAttackRelease(note.note, note.duration, time, note.velocity || 1);
+            }, [
+                { time: "0:0", note: "G4", duration: "8n" }, { time: "0:0.5", note: "A4", duration: "8n" }, { time: "0:1", note: "G4", duration: "8n" }, { time: "0:1.5", note: "F#4", duration: "8n" },
+                { time: "0:2", note: "G4", duration: "4n" }, { time: "0:3", note: "D5", duration: "4n" }, { time: "0:4", note: "C5", duration: "8n" }, { time: "0:4.5", note: "B4", duration: "8n" },
+                { time: "0:5", note: "A4", duration: "4n" }, { time: "0:6", note: "G4", duration: "4n" }, { time: "0:7", note: "F#4", duration: "4n" }, { time: "0:8", note: "E4", duration: "2n" },
+
+                { time: "1:0", note: "G4", duration: "8n" }, { time: "1:0.5", note: "A4", duration: "8n" }, { time: "1:1", note: "G4", duration: "8n" }, { time: "1:1.5", note: "F#4", duration: "8n" },
+                { time: "1:2", note: "G4", duration: "4n" }, { time: "1:3", note: "D5", duration: "4n" }, { time: "1:4", note: "C5", duration: "8n" }, { time: "1:4.5", note: "B4", duration: "8n" },
+                { time: "1:5", note: "A4", duration: "4n" }, { time: "1:6", note: "G4", duration: "4n" }, { time: "1:7", note: "A4", duration: "4n" }, { time: "1:8", note: "G4", duration: "2n" },
+
+                { time: "2:0", note: "D5", duration: "8n" }, { time: "2:0.5", note: "E5", duration: "8n" }, { time: "2:1", note: "F5", duration: "8n" }, { time: "2:1.5", note: "E5", duration: "8n" },
+                { time: "2:2", note: "D5", duration: "4n" }, { time: "2:3", note: "C5", duration: "4n" }, { time: "2:4", note: "B4", duration: "4n" }, { time: "2:5", note: "A4", duration: "2n" },
+
+                { time: "3:0", note: "G4", duration: "8n" }, { time: "3:0.5", note: "A4", duration: "8n" }, { time: "3:1", note: "G4", duration: "8n" }, { time: "3:1.5", note: "F#4", duration: "8n" },
+                { time: "3:2", note: "G4", duration: "4n" }, { time: "3:3", note: "D5", duration: "4n" }, { time: "3:4", note: "C5", duration: "4n" }, { time: "3:5", note: "G4", duration: "1n" }
+            ]);
+
+            // Set the loop to repeat indefinitely
+            demonSlayerLoop = new Tone.Loop(() => {
+                melodyPart.start(Tone.Transport.now());
+            }, "4m").start(0); 
+
+            Tone.Transport.start(); // Ensure transport is started for the loop to run
+        }
+
+        // Game Sounds
+        async function playHitSound() {
+            await initializeAudio();
+            if (hitSound) hitSound.triggerAttackRelease("C2", "8n");
+        }
+
+        async function playMissSound() {
+            await initializeAudio();
+            if (missSound) missSound.triggerAttackRelease("16n");
+        }
+
+
+        // DOM Elements
+        const giftBoxContainer = document.getElementById('giftBoxContainer');
+        const interactiveSurprisesContainer = document.getElementById('interactiveSurprisesContainer');
+        const mysteryBoxes = document.querySelectorAll('.mystery-box');
+        const surpriseCounterElem = document.getElementById('surpriseCounter');
+
+        const gameArea = document.getElementById('gameArea');
+        const gameScoreElem = document.getElementById('gameScore'); 
+        const gameTimerElem = document.getElementById('gameTimer');
+        const gameMessageElem = document.getElementById('gameMessage');
+        const gameStartOverlay = document.getElementById('gameStartOverlay');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const startGameButton = document.getElementById('startGameButton');
+        const restartGameButton = document.getElementById('restartGameButton');
+        const gameOverMessageElem = document.getElementById('gameOverMessage');
+
+        const messagesAfterGameContainer = document.getElementById('messagesAfterGame');
+        const gamerFleetDialogueBox = document.getElementById('gamerFleetDialogue');
+        const jackBhaiyaDialogueBox = document.getElementById('jackBhaiyaDialogue');
+        const gamerFleetMessageSpan = document.getElementById('gamerFleetMessage');
+        const jackBhaiyaMessageSpan = document.getElementById('jackBhaiyaMessage');
+
+        // New elements for AI Assistant's message
+        const aiAssistantDialogue = document.getElementById('aiAssistantDialogue');
+        const aiAssistantMessageSpan = document.getElementById('aiAssistantMessage');
+
+        // Elements for Ash's custom message
+        const showAshMessageButton = document.getElementById('showAshMessageButton'); // New button
+        const ashCustomMessageSection = document.getElementById('ashCustomMessageSection');
+        const ashMessageInput = document.getElementById('ashMessageInput');
+        const sendAshMessageButton = document.getElementById('sendAshMessageButton');
+        const ashCustomMessageDisplay = document.getElementById('ashCustomMessageDisplay');
+        const ashCustomMessageSpan = document.getElementById('ashCustomMessage');
+
+
+        const shareButton = document.getElementById('shareButton');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const messageBox = document.getElementById('messageBox');
+        const finalMessageAsh = document.getElementById('finalMessageAsh');
+
+        let messagesGenerated = false;
+        let initialAudioPlayed = false;
+        let revealedSurprisesCount = 0;
+        const totalSurprises = mysteryBoxes.length;
+
+        // Game Variables
+        let score = 0;
+        let timeLeft = 30; // seconds
+        let gameInterval;
+        let demonSpawnInterval;
+        let gameActive = false;
+        const targetScore = 15; // Score to win the game (Lokesh's 15th Birthday!)
+
+        // Function to show a custom message box
+        function showMessageBox(message) {
+            messageBox.textContent = message;
+            messageBox.classList.add('show');
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 3000);
+        }
+
+        // Function to fetch messages from Gemini API
+        async function fetchGeminiMessage(persona, messageElement) {
+            loadingSpinner.classList.add('show');
+            let chatHistory = [];
+            let prompt = "";
+
+            if (persona === "gamerFleet") {
+                prompt = "Generate a short, enthusiastic birthday message (max 30 words) for a gamer named Lokesh from 'Gamer Fleet'. Use gaming terms like 'GGs', 'level up', 'grinding', 'conquering', 'ping', 'frame rate'.";
+            } else if (persona === "jackBhaiya") {
+                prompt = "Generate a short, friendly, and encouraging birthday message (max 30 words) for Lokesh from 'Jack Bhaiya'. Use some Hindi slang like 'Kya baat hai', 'hardik shubhkamnayein', 'chill karo', 'chicken dinners'.";
+            } else if (persona === "aiAssistant") {
+                prompt = "Generate a short, encouraging birthday message (max 30 words) for Lokesh from 'Your AI Assistant'. Focus on future success, well-being, and digital adventures.";
+            }
+
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = { contents: chatHistory };
+            // Use the API key provided by the user
+            const apiKey = "AIzaSyDDoNHh55P1UpmSs4Avc5_d_hJSvU7yDY8";
+
+            const maxRetries = 5;
+            let retries = 0;
+            let delay = 1000;
+
+            try {
+                while (retries < maxRetries) {
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            messageElement.textContent = "Error: Unauthorized API Key. Please check your Canvas environment configuration.";
+                            console.error(`API Key Error for ${persona}:`, response.statusText);
+                            return; // Stop retrying for 401
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    console.log(`API response for ${persona}:`, result); // Log the full response
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        messageElement.textContent = text;
+                        console.log(`Successfully set message for ${persona}:`, text);
+                        return;
+                    } else {
+                        // Fallback for valid API response but no content
+                        messageElement.textContent = `Failed to generate message: No content returned for ${persona}.`;
+                        console.error(`Unexpected API response structure or empty content for ${persona}:`, result);
+                        return; // Exit the loop on this specific condition
+                    }
+                }
+            } catch (error) {
+                console.error(`Attempt ${retries + 1} failed for ${persona}:`, error);
+                messageElement.textContent = "Failed to generate message. Please try again later."; // Generic fallback on final failure
+            } finally {
+                // Ensure spinner is hidden even on error or success
+                loadingSpinner.classList.remove('show');
+            }
+        }
+
+        // Game Functions
+        function spawnDemon() {
+            if (!gameActive) return;
+
+            const demon = document.createElement('div');
+            demon.classList.add('game-demon');
+            demon.textContent = '👹'; // Demon emoji
+            // Ensure demons spawn within gameArea bounds
+            const maxX = gameArea.offsetWidth - 60; // 60px is approx emoji size
+            const maxY = gameArea.offsetHeight - 60;
+            demon.style.left = `${Math.random() * maxX}px`;
+            demon.style.top = `${Math.random() * maxY}px`;
+
+            demon.addEventListener('click', () => {
+                if (gameActive) {
+                    playHitSound();
+                    score++;
+                    gameScoreElem.textContent = `Score: ${score}`;
+                    demon.remove(); // Remove clicked demon
+
+                    if (score === targetScore) { // Check for target score win
+                        endGame(true); // Pass true for a win condition
+                    }
+                }
+            });
+
+            gameArea.appendChild(demon);
+
+            // Remove demon after a short time if not clicked
+            setTimeout(() => {
+                if (demon.parentNode === gameArea) {
+                    demon.remove();
+                }
+            }, 1500); // Demon stays for 1.5 seconds
+        }
+
+        function startGame() {
+            score = 0;
+            timeLeft = 30;
+            gameActive = true;
+            gameScoreElem.textContent = `Score: ${score}`;
+            gameTimerElem.textContent = `Time: ${timeLeft}s`;
+            gameMessageElem.textContent = '';
+            gameStartOverlay.classList.remove('visible');
+            gameOverOverlay.classList.remove('visible');
+            gameScoreElem.classList.add('visible');
+            gameTimerElem.classList.add('visible');
+            gameMessageElem.classList.remove('visible'); // Hide message at start
+
+            // Clear any existing demons
+            gameArea.querySelectorAll('.game-demon').forEach(d => d.remove());
+
+            gameInterval = setInterval(() => {
+                timeLeft--;
+                gameTimerElem.textContent = `Time: ${timeLeft}s`;
+                if (timeLeft <= 0) { // Only time runs out, score win handled in spawnDemon
+                    endGame(false); // Pass false for a time-out condition
+                }
+            }, 1000);
+
+            demonSpawnInterval = setInterval(spawnDemon, 700); // Spawn a demon every 0.7 seconds
+        }
+
+        function endGame(wonGame) { // Added 'wonGame' parameter
+            gameActive = false;
+            clearInterval(gameInterval);
+            clearInterval(demonSpawnInterval);
+
+            // Remove all remaining demons
+            gameArea.querySelectorAll('.game-demon').forEach(d => d.remove());
+
+            if (wonGame) {
+                gameOverMessageElem.innerHTML = `LEVEL UP! You reached ${targetScore} points! <br> Happy 15th Birthday, Lokesh! 🎉`;
+                createConfetti(window.innerWidth / 2, window.innerHeight / 2, 200, 2); // Big confetti for win
+            } else {
+                gameOverMessageElem.textContent = `Game Over! Score: ${score}. Try again!`;
+            }
+            gameOverOverlay.classList.add('visible');
+            gameMessageElem.classList.add('visible'); // Show message after game
+
+            // Reveal messages after game ends
+            setTimeout(async () => {
+                messagesAfterGameContainer.classList.remove('messages-after-game');
+                messagesAfterGameContainer.classList.add('visible');
+
+                // Fetch all messages concurrently
+                if (!messagesGenerated) {
+                    await Promise.all([
+                        fetchGeminiMessage("gamerFleet", gamerFleetMessageSpan),
+                        fetchGeminiMessage("jackBhaiya", jackBhaiyaMessageSpan),
+                        fetchGeminiMessage("aiAssistant", aiAssistantMessageSpan) // Fetch AI message
+                    ]);
+                    messagesGenerated = true;
+                }
+
+                // Animate dialogue boxes in sequence
+                setTimeout(() => {
+                    gamerFleetDialogueBox.classList.add('visible');
+                }, 100);
+                setTimeout(() => {
+                    jackBhaiyaDialogueBox.classList.add('visible');
+                }, 600);
+                setTimeout(() => { // Show AI Assistant message after Jack Bhaiya
+                    aiAssistantDialogue.classList.remove('hidden-content');
+                    aiAssistantDialogue.classList.add('visible');
+                }, 1100); // Adjusted delay for new message
+
+                // Reveal Ash's *new* button after all other messages
+                setTimeout(() => {
+                    showAshMessageButton.classList.remove('hidden-content');
+                    showAshMessageButton.classList.add('visible');
+                }, 1800); // Delay after other messages
+                
+                // Reveal Ash's final message (this is the static one at the very end)
+                setTimeout(() => {
+                    finalMessageAsh.classList.add('visible');
+                }, 2300); // Adjusted delay
+            }, 1500); // Delay before showing messages
+        }
+
+        // Global click listener to initialize audio context and play background melody
+        document.addEventListener('click', async () => {
+            if (!initialAudioPlayed) {
+                await initializeAudio();
+                if (Tone.Transport.state !== 'started') { // Check if transport is not already started
+                    await playDemonSlayerInspiredMelody(); // Start background music
+                }
+                initialAudioPlayed = true;
+            }
+        }, { once: true });
+
+
+        // Event Listener for Gift Box
+        giftBoxContainer.addEventListener('click', async () => {
+            if (!giftBoxContainer.classList.contains('open')) {
+                giftBoxContainer.classList.add('open');
+                await playCelebrationSound();
+                createConfetti(window.innerWidth / 2, window.innerHeight / 2);
+
+                document.body.classList.add('celebration-background');
+
+                setTimeout(() => {
+                    interactiveSurprisesContainer.classList.add('visible');
+                    surpriseCounterElem.classList.add('visible');
+                }, 500);
+            }
+        });
+
+        // Event Listeners for Mystery Boxes
+        mysteryBoxes.forEach(box => {
+            box.addEventListener('click', async () => {
+                if (!box.classList.contains('revealed')) {
+                    box.classList.add('revealed');
+                    revealedSurprisesCount++;
+                    surpriseCounterElem.textContent = `${revealedSurprisesCount}/${totalSurprises} Surprises Revealed`;
+                    await playRevealSound();
+
+                    if (revealedSurprisesCount === totalSurprises) {
+                        // All surprises revealed, now show the game
+                        setTimeout(() => {
+                            interactiveSurprisesContainer.classList.remove('visible'); // Hide mystery boxes
+                            surpriseCounterElem.classList.remove('visible'); // Hide counter
+                            gameArea.classList.remove('hidden-content');
+                            gameArea.classList.add('visible');
+                            gameStartOverlay.classList.add('visible'); // Show start game overlay
+                        }, 500);
+                    }
+                }
+            });
+        });
+
+        // Game Controls
+        startGameButton.addEventListener('click', startGame);
+        restartGameButton.addEventListener('click', startGame);
+
+        // Click listener for game area to register misses
+        gameArea.addEventListener('click', (event) => {
+            if (gameActive && !event.target.classList.contains('game-demon')) {
+                playMissSound();
+            }
+        });
+
+        // Event Listener for new "Ash's Personal Message" Button
+        showAshMessageButton.addEventListener('click', () => {
+            showAshMessageButton.classList.remove('visible');
+            showAshMessageButton.classList.add('hidden-content'); // Hide this button
+
+            ashCustomMessageSection.classList.remove('hidden-content');
+            ashCustomMessageSection.classList.add('visible'); // Show Ash's input section
+            ashMessageInput.classList.remove('hidden-content');
+            ashMessageInput.classList.add('visible');
+            sendAshMessageButton.classList.remove('hidden-content');
+            sendAshMessageButton.classList.add('visible');
+        });
+
+        // Event Listener for Send Ash Message Button (inside ashCustomMessageSection)
+        sendAshMessageButton.addEventListener('click', () => {
+            const customMessage = ashMessageInput.value.trim();
+            if (customMessage) {
+                ashCustomMessageSpan.textContent = customMessage;
+                ashCustomMessageDisplay.classList.remove('hidden-content');
+                ashCustomMessageDisplay.classList.add('visible');
+                createConfetti(window.innerWidth / 2, window.innerHeight / 2, 100, 1.5); // Confetti for custom message
+
+                // Optionally hide the input and button after sending
+                ashMessageInput.classList.remove('visible');
+                ashMessageInput.classList.add('hidden-content');
+                sendAshMessageButton.classList.remove('visible');
+                sendAshMessageButton.classList.add('hidden-content');
+            } else {
+                showMessageBox("Please type a message for Lokesh!");
+            }
+        });
+
+        // Event Listener for Share Button
+        shareButton.addEventListener('click', () => {
+            const gamerMessage = gamerFleetMessageSpan.textContent;
+            const jackMessage = jackBhaiyaMessageSpan.textContent;
+            const aiMessage = aiAssistantMessageSpan.textContent; // Get AI message
+            const finalMessage = finalMessageAsh.textContent;
+            const customAshMessage = ashCustomMessageSpan.textContent; // Get custom message if available
+
+            let fullMessage = `Happy Birthday, Lokesh! 🎉\n\nFrom Ash:\nHey Lokesh, Ash here! Wishing you an epic birthday filled with victories, legendary loot, and zero lag! Hope your day is as awesome as a perfect headshot!\n\nGamer Fleet says: "${gamerMessage}"\n\nJack Bhaiya says: "${jackMessage}"\n\nYour AI Assistant says: "${aiMessage}"\n\n`;
+
+            if (customAshMessage && ashCustomMessageDisplay.classList.contains('visible')) {
+                fullMessage += `Ash's Special Message: "${customAshMessage}"\n\n`;
+            }
+
+            fullMessage += finalMessage; // Add the original final message
+
+            const el = document.createElement('textarea');
+            el.value = fullMessage;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            showMessageBox('Birthday wish copied to clipboard!');
+        });
+
+        // Start confetti animation loop
+        animateConfetti();
+    </script>
+</body>
+</html>
