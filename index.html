@@ -1,225 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Happy Birthday Lokesh!</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    /* --- General Styles --- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: black;
-      color: white;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .screen {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      z-index: 1;
-    }
-
-    /* --- Intro Screen --- */
-    #openBtn {
-      background: #ff4f8b;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1.2em;
-      border-radius: 10px;
-      color: white;
-      cursor: pointer;
-      animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-
-    /* --- Main Content Screen --- */
-    #mainContent {
-      display: none;
-      background: url('https://wallpaperaccess.com/full/4025787.jpg') no-repeat center center fixed;
-      background-size: cover;
-      padding: 20px;
-    }
-
-    h1 {
-      font-size: 3em;
-      text-shadow: 0 0 10px #ff4f8b;
-      margin-bottom: 10px;
-    }
-
-    .message {
-      font-size: 1.2em;
-      margin: 10px 0;
-      background: rgba(0,0,0,0.5);
-      padding: 10px 20px;
-      border-radius: 10px;
-    }
-
-    /* --- Animations and Effects --- */
-    .wamuuu {
-      margin-top: 20px;
-      font-size: 2em;
-      color: #ff4f8b;
-      animation: wamuuuPop 1s ease-in-out infinite alternate;
-    }
-
-    @keyframes wamuuuPop {
-      from { transform: scale(1); }
-      to { transform: scale(1.2); color: #ff0000; }
-    }
-
-    canvas.confetti {
-      position: fixed;
-      pointer-events: none;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 999;
-    }
-
-    .sparkle {
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      background: radial-gradient(circle, #ff4f8b 0%, transparent 70%);
-      border-radius: 50%;
-      animation: sparkle 2s infinite ease-in-out;
-    }
-    @keyframes sparkle {
-      0% { transform: scale(1); opacity: 1; }
-      100% { transform: scale(2); opacity: 0; }
-    }
-
-    .typewriter-text {
-      overflow: hidden;
-      border-right: .15em solid #ff4f8b;
-      white-space: nowrap;
-      margin: 10px auto;
-      animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
-      width: 0;
-    }
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    @keyframes blink-caret {
-      from, to { border-color: transparent; }
-      50% { border-color: #ff4f8b; }
-    }
-
-    .hearts {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      font-size: 1.5em;
-      animation: floatHearts 3s ease-in-out infinite;
-    }
-    @keyframes floatHearts {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
-
-    .tanjiro {
-      width: 150px;
-      animation: slideIn 2s ease-in-out;
-      margin-top: 10px;
-    }
-    @keyframes slideIn {
-      from { transform: translateX(-200%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-  </style>
-</head>
-<body>
-
-  <div id="intro" class="screen">
-    <h1>🎁 Tap to open Lokesh's surprise</h1>
-    <button id="openBtn" aria-label="Open birthday surprise">Open</button>
-  </div>
-
-  <div id="mainContent" class="screen">
-    <img src="https://media.tenor.com/P-w2_M_d2FAAAAAC/tanjiro-kamado.gif" alt="Tanjiro" class="tanjiro">
-    <h1 id="title">Happy Birthday Lokesh!</h1>
-    <p id="message1" class="message">May your day be as powerful as Tanjiro’s blade 🗡️</p>
-    <p class="message">From Ask — your bro till respawn 💚</p>
-    <div class="wamuuu">WAMUUUU!</div>
-    <div class="hearts">💖💚💛</div>
-    <canvas class="confetti" id="confetti"></canvas>
-  </div>
-
-  <audio id="background-audio" src="Infinity audio.mp3" loop></audio>
-
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Lokesh</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script>
-    const openBtn = document.getElementById("openBtn");
-    const intro = document.getElementById("intro");
-    const mainContent = document.getElementById("mainContent");
-    const backgroundAudio = document.getElementById("background-audio");
-    const title = document.getElementById("title");
-    const message1 = document.getElementById("message1");
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at center, #d1fae5, #10b981);
+      overflow-x: hidden;
+      position: relative;
+    }.gift-box {
+  transition: transform 0.4s ease;
+  cursor: pointer;
+}
 
-    // Event listener for the "Open" button
-    openBtn.addEventListener("click", () => {
-      intro.style.display = "none";
-      mainContent.style.display = "flex";
-      
-      // Play audio on user interaction
-      backgroundAudio.play();
+.gift-box.open {
+  transform: rotateY(180deg);
+}
 
-      // Start animations
-      startConfetti();
-      startSparkles();
+.hidden-content {
+  display: none;
+}
 
-      // Add typewriter effect after content is shown
-      title.classList.add("typewriter-text");
-      setTimeout(() => {
-        message1.classList.add("typewriter-text");
-      }, 4000); // Wait for title animation to finish before starting message
+.visible-content {
+  display: block;
+}
+
+.dialogue-box {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+.dialogue-box.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+  </style>
+</head><body class="flex items-center justify-center min-h-screen">
+  <audio autoplay loop hidden>
+    <source src="birthday-music.mp3" type="audio/mpeg">
+  </audio><canvas id="confetti-canvas"></canvas>
+
+  <div id="giftBoxContainer" class="gift-box bg-yellow-300 p-10 rounded-lg shadow-lg text-center">
+    <h1 class="text-4xl font-bold">🎁 Tap Me 🎁</h1>
+  </div>  <div id="hiddenContent" class="hidden-content mt-10 text-center">
+    <h2 class="text-3xl font-bold mb-4">🎉 Happy Birthday Lokesh 🎉</h2>
+    <p class="text-lg">Wishing you an amazing day filled with love and surprises!</p>
+    <div class="dialogue-box mt-4 p-4 bg-white rounded shadow-md">You are stronger than you think!</div>
+    <div class="dialogue-box mt-4 p-4 bg-white rounded shadow-md">Keep being awesome and kind!</div>
+    <div class="dialogue-box mt-4 p-4 bg-white rounded shadow-md">Today is your day – enjoy it fully!</div>
+  </div>  <div class="fixed bottom-4 right-4">
+    <button onclick="navigator.share({title: 'Happy Birthday Lokesh 🎉', text: 'Check out this surprise!', url: window.location.href})" class="bg-white p-3 rounded-full shadow-md hover:bg-gray-100 transition">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
+        <path d="M18 8a3 3 0 0 0-2.83 2H9.83a3 3 0 1 0 0 2h5.34a3 3 0 1 0 2.83-2z"/>
+      </svg>
+    </button>
+  </div>  <script>
+    const giftBox = document.getElementById("giftBoxContainer");
+    const hiddenContent = document.getElementById("hiddenContent");
+    const dialogueBoxes = document.querySelectorAll(".dialogue-box");
+
+    giftBox.addEventListener("click", () => {
+      giftBox.classList.add("open");
+      hiddenContent.classList.remove("hidden-content");
+      hiddenContent.classList.add("visible-content");
+      dialogueBoxes.forEach((box, index) => {
+        setTimeout(() => box.classList.add("visible"), index * 500);
+      });
+
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
     });
-
-    // Function to start confetti with better animation loop
-    function startConfetti() {
-      (function frame() {
-        confetti({
-          particleCount: 150,
-          spread: 80,
-          origin: { y: 0.6 }
-        });
-        setTimeout(frame, 2000); // Recursively call after a delay
-      })();
-    }
-
-    // Function to start sparkles with better animation loop
-    function startSparkles() {
-      (function frame() {
-        const sparkle = document.createElement("div");
-        sparkle.classList.add("sparkle");
-        sparkle.style.left = Math.random() * 100 + "%";
-        sparkle.style.top = Math.random() * 100 + "%";
-        document.body.appendChild(sparkle);
-        setTimeout(() => sparkle.remove(), 2000);
-        setTimeout(frame, 500); // Recursively call after a delay
-      })();
-    }
-  </script>
-</body>
-  </html>
+  </script></body></html>
