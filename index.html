@@ -489,6 +489,17 @@
             opacity: 1;
             transform: translateY(0);
         }
+        /* New Ash Message Button */
+        #showAshMessageButton {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            margin-top: 2rem; /* Spacing from previous elements */
+        }
+        #showAshMessageButton.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -569,10 +580,4 @@
         <!-- Hidden Content (messages, revealed after game) -->
         <div id="messagesAfterGame" class="messages-after-game">
             <!-- Gamer Fleet Dialogue -->
-            <div id="gamerFleetDialogue" class="dialogue-box">
-                <p><strong>Gamer Fleet says:</strong> <span id="gamerFleetMessage">Loading a special message...</span></p>
-            </div>
-
-            <!-- Jack Bhaiya Dialogue -->
-            <div id="jackBhaiyaDialogue" class="dialogue-box">
-                <p><strong>Jack Bhaiya says:</strong> <span id="jackBhaiyaMessage">Loading a special message...<
+            <div id="gamerFl
